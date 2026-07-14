@@ -1,69 +1,50 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   bigint.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fatkeski <fatkeski@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/23 14:17:26 by fatkeski          #+#    #+#             */
-/*   Updated: 2025/08/01 13:57:18 by fatkeski         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#ifndef BIGINT_HPP
+#define BIGINT_HPP
 
-#ifndef BIGINT
-#define BIGINT
-
-#include <sstream>
 #include <iostream>
-#include <string>
-#include <cstdlib>
+#include <sstream>
+#include <algorithm>
 
 class bigint
 {
-	private:
-		std::string str;
-		//std::string result;
-	public:
-		bigint();
-		bigint(unsigned int num);
-		bigint(const bigint& source);
+    private:
+        std::string str;
+    public:
+        bigint();
+        bigint(unsigned int n);
+        bigint(std::string str);
+        bigint(const bigint &obj);
+        bigint &operator=(const bigint &obj);
+        ~bigint();
 
-		std::string getStr()const;
+        std::string get_str() const;
 
-		bigint& operator=(const bigint& source);
+        bigint &operator+=(const bigint &obj);
 
-		// addition
-		bigint operator+(const bigint& other)const;
-		bigint& operator+=(const bigint& other);
+        bigint &operator++();
+        bigint operator++(int);
 
-		// increments
-		bigint& operator++(); // ++x
-		bigint operator++(int); // x++
+        bigint operator<<(unsigned int n) const;
+        bigint operator>>(unsigned int n) const;
+        bigint &operator>>=(unsigned int n);
+        bigint &operator<<=(unsigned int n);
 
-		// shift with num
-		bigint operator<<(unsigned int n)const;
-		bigint operator>>(unsigned int n)const;
-		bigint& operator<<=(unsigned int n);
-		bigint& operator>>=(unsigned int n);
+        bigint operator<<(const bigint &oth) const;
+        bigint operator>>(const bigint &oth) const;
+        bigint &operator>>=(const bigint &oth);
+        bigint &operator<<=(const bigint &oth);
 
-		//shift with object
-		bigint operator<<(const bigint& other)const;
-		bigint operator>>(const bigint& other)const;
-		bigint& operator<<=(const bigint& other);
-		bigint& operator>>=(const bigint& other);
+        bool operator!=(const bigint &oth);
+        bool operator==(const bigint &oth);
+        bool operator>(const bigint &oth);
+        bool operator<(const bigint &oth);
+        bool operator>=(const bigint &oth);
+        bool operator<=(const bigint &oth);
 
-		// ==, !=, <, >, <=, >=
-		bool operator==(const bigint& other) const;
-		bool operator!=(const bigint& other) const;
-		bool operator<(const bigint& other) const;
-		bool operator>(const bigint& other) const;
-		bool operator<=(const bigint& other) const;
-		bool operator>=(const bigint& other) const;
-
-		// ~bigint();
 
 };
 
-std::ostream& operator<<(std::ostream& output, const bigint& obj);
+bigint operator+(const bigint &a, const bigint &b);
+std::ostream &operator<<(std::ostream &os, const bigint &obj);
 
 #endif
