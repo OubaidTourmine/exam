@@ -14,16 +14,15 @@ bigint::bigint(std::string str)
     this->str = str;
 }
 
-bigint::bigint(const bigint &obj)
+bigint::bigint(const bigint &oth)
 {
-    (*this) = obj;
+    (*this) = oth;
 }
 
-bigint &bigint::operator=(const bigint &obj)
+bigint &bigint::operator=(const bigint &oth)
 {
-    if(this == &obj)
-        return (*this);
-    this->str = obj.str;
+    if(this != &oth)
+        this->str = oth.str;
     return (*this);
 }
 
@@ -34,7 +33,7 @@ std::string bigint::get_str() const
     return (this->str);
 }
 
-bigint operator+(const bigint &a, const bigint &)
+bigint operator+(const bigint &a, const bigint &b)
 {
     const std::string &A = a.get_str();
     const std::string &B = b.get_str();
@@ -45,12 +44,11 @@ bigint operator+(const bigint &a, const bigint &)
     int i = (int)A.size() - 1;
     int j = (int)B.size() - 1;
 
-    while (i >= 0 || j >= 0 || carry > 0)
+    while(i >= 0 || j >= 0 || carry > 0)
     {
         int digitA = 0;
         if(i >= 0)
             digitA = A[i] - '0';
-
         int digitB = 0;
         if(j >= 0)
             digitB = B[j] - '0';
@@ -62,96 +60,102 @@ bigint operator+(const bigint &a, const bigint &)
         j--;
     }
     std::reverse(res.begin(), res.end());
-    return(bigint(res));
+    return (bigint(res));
 }
 
-bigint &bigint::operator+=(const bigint &obj)
+bigint &bigint::operator+=(const bigint &oth)
 {
-    (*this) = (*this) + obj;
-    return *this;
+    (*this) = (*this) + oth;
+    return (*this);
 }
 
 bigint &bigint::operator++()
 {
     (*this) = (*this) + bigint(1);
-    return (*this);
+    return(*this);
 }
 
 bigint bigint::operator++(int)
 {
     bigint temp = (*this);
-    (*this) = (*this) + bigint(1);
-    return (temp);
+    temp = (*this) + bigint(1);
+    return(*this);
 }
 
-bigint bigint::operator<<(unsigned  int n) const
+
+std::ostream &operator<<(std::ostream &os, const bigint &obj)
+{
+    os << obj.get_str();
+    return os;
+}
+
+bigint bigint::operator<<(unsigned int num) const
 {
     bigint temp = (*this);
-    temp.str.insert(temp.str.end(), n, '0');
+    temp.str.insert(temp.str.end(), num, '0');
     return temp;
-} 
+}
 
-bigint bigint::operator>>(unsigned int n) const
+bigint bigint::operator>>(unsigned int num) const
 {
     bigint temp = (*this);
     size_t len = temp.str.length();
-    if(n >= len)
+    if(num >= len)
         temp.str = "0";
     else
-        temp.str.erase(temp.str.length() - n, n);
+        temp.str.erase(temp.str.length() - num, num);
     return temp;
 }
 
-bigint &bigint::operator>>=(unsigned int n)
+bigint &bigint::operator<<=(unsigned int num)
 {
-    (*this) = (*this) >> n;
+    (*this) = (*this) << num;
     return (*this);
 }
 
-bigint &bigint::operator<<=(unsigned int n)
+bigint &bigint::operator>>=(unsigned int num)
 {
-    (*this) = (*this) << n;
+    (*this) = (*this) >> num;
     return (*this);
 }
 
 unsigned int str_to_int(std::string str)
 {
-    std::stringstream ss(str);
     unsigned int num;
+    std::stringstream ss(str);
     ss >> num;
     return num;
-}
-
-bigint bigint::operator>>(const bigint &oth) const
-{
-    bigint temp = (*this);
-    temp = (*this) >> str_to_int(oth.str);
-    return temp;
 }
 
 bigint bigint::operator<<(const bigint &oth) const
 {
     bigint temp = (*this);
     temp = (*this) << str_to_int(oth.str);
-    return temp;
+    return (temp);
 }
 
-bigint &bigint::operator>>=(const bigint &oth)
+bigint bigint::operator>>(const bigint &oth) const
 {
-    (*this) = (*this) >> str_to_int(oth.str);
-    return (*this);
+    bigint temp = (*this);
+    temp = (*this) >> str_to_int(oth.str);
+    return (temp);
 }
 
 bigint &bigint::operator<<=(const bigint &oth)
 {
-    (*this) = (*this) << str_to_int(oth.str);
+    (*this) = (*this) << oth;
     return (*this);
+}
 
+bigint &bigint::operator>>=(const bigint &oth)
+{
+    (*this) = (*this) >> oth;
+    return (*this);
 }
 
 bool bigint::operator==(const bigint &oth)
 {
-    if(this->str == oth.get_str())
+    if(this->str == oth.str)
         return true;
     return false;
 }
@@ -176,21 +180,18 @@ bool bigint::operator>(const bigint &oth)
 
 bool bigint::operator<(const bigint &oth)
 {
-    return(!((*this) > oth));
+    return (!((*this) > oth));
 }
 
 bool bigint::operator>=(const bigint &oth)
 {
-    return(((*this) > oth) || ((*this) == oth));
+    if (((*this) > oth) || ((*this) == oth) )
+        return true;
+    return false;
 }
-
 bool bigint::operator<=(const bigint &oth)
 {
-    return(((*this) < oth) || ((*this) == oth));
-}
-
-std::ostream &operator<<(std::ostream &os, const bigint &obj)
-{
-    os << obj.get_str();
-    return os;
+    if (((*this) < oth) || ((*this) == oth) )
+        return true;
+    return false;
 }

@@ -1,5 +1,4 @@
 #include "set.hpp"
-#include "searchable_array_bag.hpp"
 
 set::set(const set &source) : bag(source.bag) {};
 
